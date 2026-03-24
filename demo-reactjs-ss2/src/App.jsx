@@ -19,8 +19,8 @@ function App() {
                  </tr>
                 </thead>
                 <tbody>
-                {getAll().map(s =>(
-                    <tr>
+                {getAll().map((s,i) =>(
+                    <tr key={i}>
                         <td>{s.company}</td>
                         <td>{s.contact}</td>
                         <td>{s.country}</td>
