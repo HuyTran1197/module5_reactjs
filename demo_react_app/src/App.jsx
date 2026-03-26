@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import './App.css'
-import CustomerListComponent from "./class_component/CustomerListComponent.jsx";
 import AppTodo from "./class_component/AppTodo.jsx";
+import List from "./component/List.jsx";
+import FootballList from "./component/FootballList.jsx";
 
 function App() {
 
@@ -11,7 +12,10 @@ function App() {
             <AppTodo/>
             <hr/>
             <h1>Customer List</h1>
-            <CustomerListComponent/>
+            <List/>
+            <hr/>
+            <h1>Player List</h1>
+            <FootballList/>
 
         </>
     )
