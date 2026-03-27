@@ -1,5 +1,6 @@
 import {Button, Modal} from "react-bootstrap";
 import {deleteById} from "../service/FootbalPlayerService.js";
+import {toast} from "react-toastify";
 
 const DeletePlayer = ({isShowModal,deletePlayer,closeModal,setIsLoading}) =>{
 
@@ -11,6 +12,7 @@ const DeletePlayer = ({isShowModal,deletePlayer,closeModal,setIsLoading}) =>{
         deleteById(deletePlayer.id);
         closeModal(false);
         setIsLoading(pre=>!pre);
+        toast.success('Delete success');
     }
 
     return(

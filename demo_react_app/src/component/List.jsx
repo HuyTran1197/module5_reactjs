@@ -25,6 +25,7 @@ const List = ()=>{
     return(
         <>
             {console.log("-----render----")}
+            <h1>Customer List</h1>
             <table>
                 <thead>
                 <tr>

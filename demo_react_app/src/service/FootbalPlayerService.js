@@ -38,10 +38,13 @@ export function deleteById(id){
 export function addNew(player) {
     for (let i = 0; i < footballPlayerList.length; i++) {
         if (footballPlayerList[i].id==player.id){
-            alert("id is already exists");
             return false;
         }
     }
     footballPlayerList.push(player);
-    alert("Add new success");
+    return true;
+}
+
+export function findById(id) {
+    return footballPlayerList.find(e=>e.id==id);
 }

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {getList} from "../service/FootbalPlayerService.js";
 import DeletePlayer from "./DeletePlayer.jsx";
-import AddPlayer from "./AddPlayer.jsx";
+import {Link} from "react-router";
 
 const FootballList = ()=>{
     const [footballList,setFootballList] = useState([]);
@@ -25,7 +25,8 @@ const FootballList = ()=>{
     return(
         <>
             {console.log("-----render----")}
-            <AddPlayer setIsLoading={setIsLoading} />
+            <h1>Football Player</h1>
+            <Link to={'/football/add'}>Add new</Link>
             <table>
                 <thead>
                 <tr>
@@ -48,7 +49,11 @@ const FootballList = ()=>{
                         <td>{e.transfer}</td>
                         <td>{e.position}</td>
                         <td>
-                            <button onClick={()=>{
+                            <Link className={'btn btn-sm btn-primary'}
+                                to={`/football/detail/${e.id}`}>
+                                View
+                            </Link>
+                            <button className={'btn btn-sm btn-danger'} onClick={()=>{
                                 handleOpenModal(e)
                             }}>
                                 Delete
