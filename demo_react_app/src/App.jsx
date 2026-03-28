@@ -21,8 +21,8 @@ function App() {
                 <Route path={'/football'} element={<FootballList/>}/>
                 <Route path={'/football/add'} element={<AddPlayer/>}/>
                 <Route path={'/football/detail/:id'} element={<Detail/>}/>
-                <Route path={'/todo'} element={<AppTodo/>}/>
                 <Route path={'/customer'} element={<List/>}/>
+                <Route path={'/todo'} element={<AppTodo/>}/>
             </Routes>
             <ToastContainer/>
 

@@ -7,8 +7,8 @@ const Home = () => {
                 <h1>Home</h1>
                 <ul>
                     <li><Link to={'/football'}>Football</Link></li>
-                    <li><Link to={'/todo'}>Todo app</Link></li>
                     <li><Link to={'/customer'}>Customer List</Link></li>
+                    <li><Link to={'/todo'}>Todo app</Link></li>
                 </ul>
             </div>
         </>
