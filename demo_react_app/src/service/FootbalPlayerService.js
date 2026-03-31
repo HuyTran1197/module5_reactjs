@@ -1,50 +1,47 @@
+import axios from "axios";
 
-const footballPlayerList = [{
-    id: 1,
-    playerId: 2304,
-    name: "Ronaldo",
-    birthday: "5/2/1985",
-    transfer: "1 billion euro",
-    position: "Strike"
-}, {
-    id: 2,
-    playerId: 2305,
-    name: "Messi",
-    birthday: "5/5/1987",
-    transfer: "1,1 billion euro",
-    position: "Attack Mid"
-}, {
-    id: 3,
-    playerId: 2306,
-    name: "Dinh Bac Nguyen",
-    birthday: "19/8/2004",
-    transfer: "500 thousands euro",
-    position: "Left Strike"
-}]
+const BE_URL = "http://localhost:3000";
 
-export function getList(){
-    return footballPlayerList;
-}
-
-export function deleteById(id){
-    for (let i = 0; i < footballPlayerList.length; i++) {
-        if (footballPlayerList[i].id==id){
-            footballPlayerList.splice(i,1);
-            break;
-        }
+export async function getList() {
+    try {
+        const res = await axios.get(`${BE_URL}/players`);
+        return res.data;
+    }catch (e) {
+        console.log(e)
     }
+    return [];
 }
 
-export function addNew(player) {
-    for (let i = 0; i < footballPlayerList.length; i++) {
-        if (footballPlayerList[i].id==player.id){
-            return false;
+export async function deleteById(id) {
+    try {
+        const res = await axios.delete(`${BE_URL}/players/${id}`);
+        if (res.status===200) {
+            return true;
         }
+    }catch (e) {
+        console.log(e)
     }
-    footballPlayerList.push(player);
-    return true;
+    return false;
 }
 
-export function findById(id) {
-    return footballPlayerList.find(e=>e.id==id);
+export async function addNew(player) {
+    try {
+        const res = await axios.post(`${BE_URL}/players`,player);
+        if (res.status===201) return true;
+    }catch (e) {
+        console.log(e)
+    }
+    return false;
 }
+
+export async function findById(id) {
+    try {
+        const res = await axios.get(`${BE_URL}/players/${id}`);
+        return res.data;
+    }catch (e) {
+        console.log(e)
+    }
+    return null;
+}
+
+

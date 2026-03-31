@@ -4,22 +4,35 @@ import DeletePlayer from "./DeletePlayer.jsx";
 import {Link} from "react-router";
 import {Field, Form, Formik} from "formik";
 import {Button} from "react-bootstrap";
+import {getAll} from "../service/PositionService.js";
 
-const FootballList = ()=>{
-    const [footballList,setFootballList] = useState([]);
-    const [deletePlayer,setDeletePlayer] = useState({
+const FootballList = () => {
+    const [footballList, setFootballList] = useState([]);
+    const [positionList, setPositionList] = useState([])
+    const [deletePlayer, setDeletePlayer] = useState({
+        id: "",
         name: ""
     });
-    const [isShowModal,setIsShowModal] = useState(false);
-    const [isLoading,setIsLoading] = useState(false);
+    const [isShowModal, setIsShowModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
 
     useEffect(() => {
-        setFootballList([
-            ...getList()
-        ])
+        const fetData = async () => {
+            const playerList = await getList();
+            setFootballList(playerList);
+        }
+        fetData();
     }, [isLoading]);
 
-    const handleOpenModal = (player)=>{
+    useEffect(() => {
+        const fetDataP = async () => {
+            setPositionList(await getAll())
+        }
+        fetDataP();
+    }, []);
+
+    const handleOpenModal = (player) => {
         setDeletePlayer(player);
         setIsShowModal(true);
     }
@@ -27,23 +40,25 @@ const FootballList = ()=>{
     const [search] = useState({
         playerId: "",
         name: "",
-        position: ""
+        playerPosition: ""
     });
 
-    const handleSearch = (values) => {
-        const filterList = getList().filter((player)=>
-            (values.playerId==="" || player.playerId.toString().includes(values.playerId)) &&
-            (values.name==="" || player.name.toLowerCase().includes(values.name.toLowerCase())) &&
-            (values.position===""||player.position.toLowerCase().includes(values.position.toLowerCase()))
+    const handleSearch = async (values) => {
+        const playerList = await getList(); // chờ lấy dữ liệu
+        const filterList = playerList.filter(player =>
+            (values.playerId === "" || player.playerId.toString().includes(values.playerId)) &&
+            (values.name === "" || player.name.toLowerCase().includes(values.name.toLowerCase())) &&
+            (values.playerPosition === "" || player.playerPosition === Number(values.playerPosition))
         );
 
         setFootballList(filterList);
     }
 
-    const handleReset = () => {
-        setFootballList([...getList()])
+    const handleReset = async () => {
+        const playerList = await getList();
+        setFootballList(playerList);
     }
-    return(
+    return (
         <>
             {console.log("-----render----")}
             <h1>Football Player</h1>
@@ -52,9 +67,14 @@ const FootballList = ()=>{
             </div>
             <Formik initialValues={search} onSubmit={handleSearch}>
                 <Form>
-                    <Field name={'playerId'} placeHolder={'Enter player id'}/>
-                    <Field name={'name'} placeHolder={'Enter name'}/>
-                    <Field name={'position'} placeHolder={'Enter position'}/>
+                    <Field name={'playerId'} placeholder={'Enter player id'}/>
+                    <Field name={'name'} placeholder={'Enter name'}/>
+                    <Field as="select" name="playerPosition">
+                        <option value="">--------choose position----------</option>
+                        {positionList.map(p => (
+                            <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                    </Field>
                     <Button type={'submit'} className={'btn btn-sm btn-secondary'}>Search</Button>
                     <Button type={'reset'}
                             onClick={handleReset}
@@ -66,7 +86,6 @@ const FootballList = ()=>{
             <table>
                 <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Player Id</th>
                     <th>Name</th>
                     <th>Birthday</th>
@@ -76,20 +95,21 @@ const FootballList = ()=>{
                 </tr>
                 </thead>
                 <tbody>
-                {footballList.map((e)=>(
+                {footballList.map((e) => (
                     <tr key={e.id}>
-                        <td>{e.id}</td>
                         <td>{e.playerId}</td>
                         <td>{e.name}</td>
                         <td>{e.birthday}</td>
                         <td>{e.transfer}</td>
-                        <td>{e.position}</td>
+                        <td>
+                            {positionList.find(p => p.id === e.playerPosition)?.name || ""}
+                        </td>
                         <td>
                             <Link className={'btn btn-sm btn-primary'}
-                                to={`/football/detail/${e.id}`}>
+                                  to={`/football/detail/${e.id}`}>
                                 View
                             </Link>
-                            <button className={'btn btn-sm btn-danger'} onClick={()=>{
+                            <button className={'btn btn-sm btn-danger'} onClick={() => {
                                 handleOpenModal(e)
                             }}>
                                 Delete
@@ -100,12 +120,12 @@ const FootballList = ()=>{
                 </tbody>
             </table>
             <DeletePlayer isShowModal={isShowModal}
-                    deletePlayer={deletePlayer}
-                    closeModal={setIsShowModal}
-                    setIsLoading={setIsLoading}
+                          deletePlayer={deletePlayer}
+                          closeModal={setIsShowModal}
+                          setIsLoading={setIsLoading}
             />
         </>
     )
 }
 
-export default FootballList ;
+export default FootballList;

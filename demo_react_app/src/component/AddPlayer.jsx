@@ -1,10 +1,11 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {addNew} from "../service/FootbalPlayerService.js";
 import {useNavigate} from "react-router";
 import {toast} from "react-toastify";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {Button} from "react-bootstrap";
+import {getAll} from "../service/PositionService.js";
 
 const AddPlayer = () => {
     const [player] = useState({
@@ -13,33 +14,39 @@ const AddPlayer = () => {
         name: "",
         birthday:"",
         transfer:"",
-        position:""
+        playerPosition:""
     });
+    const [positionList,setPositionList] = useState([])
 
-    // useEffect(() => {
-    //     setPlayer([
-    //         ...getList()]
-    //     )
-    // }, []);
+    useEffect(() => {
+        const fetData = async () => {
+            setPositionList(await getAll())
+        }
+        fetData();
+    }, []);
 
     const navigate = useNavigate();
 
     const handleAdd = (value) => {
         value={
-            ...value
+            ...value,
+            playerPosition: JSON.parse(value.playerPosition)
         }
-        const isSuccess = addNew(value);
-        if (isSuccess){
-            toast.success('Add new success');
+        const fetData = async () => {
+            const isSuccess = await addNew(value);
+            if (isSuccess){
+                toast.success('Add new success');
+            }else {
+                toast.error('Id is already exists');
+            }
             navigate('/football');
-        }else {
-            toast.error('Id is already exists');
         }
+        fetData();
     }
 
     const validation = Yup.object({
-        id:Yup.number().required('Please fill id')
-            .min(1,"must not be less than 1"),
+        // id:Yup.number().required('Please fill id')
+        //     .min(1,"must not be less than 1"),
         playerId:Yup.number().required('Please fill player id')
             .min(1000,"number's length must not be less than 4"),
         name:Yup.string().required('Please fill name')
@@ -49,19 +56,18 @@ const AddPlayer = () => {
             .typeError('Format birthday is wrong'),
         transfer: Yup.string().required('Please fill transfer')
             .matches(/^[0-9,]+(\s[a-z]+)+$/,'Format transfer is wrong'),
-        position: Yup.string().required('Please fill position')
-            .matches(/^[A-Z][a-z]+(\s[A-z][a-z]*)*$/,'Format position is wrong')
+        playerPosition: Yup.string().required('Please fill position')
     })
 
     return(
         <>
             <Formik initialValues={player} onSubmit={handleAdd} validationSchema={validation}>
                 <Form>
-                    <div>
-                        <label>ID</label>
-                        <Field type ="number" name ="id"/>
-                        <ErrorMessage name={'id'} className={'text-danger'} component={'small'}/>
-                    </div>
+                    {/*<div>*/}
+                    {/*    <label>ID</label>*/}
+                    {/*    <Field type ="number" name ="id"/>*/}
+                    {/*    <ErrorMessage name={'id'} className={'text-danger'} component={'small'}/>*/}
+                    {/*</div>*/}
                     <div>
                         <label>Player Id</label>
                         <Field type ="number" name ="playerId"/>
@@ -83,22 +89,15 @@ const AddPlayer = () => {
                         <ErrorMessage name={'transfer'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <label>Position</label>
-                        <Field type ="text" name ="position"/>
-                        <ErrorMessage name={'position'} className={'text-danger'} component={'small'}/>
-                    </div>
-                    {/*<div>*/}
-                    {/*    <Field as ={'select'} name ={'classCG'}>*/}
-                    {/*        <option value={''}>--------Chọn lớp----------</option>*/}
-                    {/*        {*/}
-                    {/*            classList.map(cls =>(*/}
-                    {/*                <option key={cls.id} value={JSON.stringify(cls)}>{cls.name}</option>*/}
-                    {/*            ))*/}
-                    {/*        }*/}
-                    {/*    </Field>*/}
-                    {/*    <ErrorMessage name={'classCG'} className={'text-danger'} component={'small'}/>*/}
+                        <Field as="select" name="playerPosition">
+                            <option value="">--------choose position----------</option>
+                            {positionList.map(p => (
+                                <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
+                        </Field>
+                        <ErrorMessage name={'playerPosition'} className={'text-danger'} component={'small'}/>
 
-                    {/*</div>*/}
+                    </div>
                     <div>
                         <Button type={'submit'}>Save</Button>
                     </div>

@@ -1,0 +1,46 @@
+{
+  "players": [
+    {
+      "id": 1,
+      "playerId": 2301,
+      "name": "Cristiano Ronaldo",
+      "birthday": "1985-07-07",
+      "transfer": "1 billion euro",
+      "playerPosition": 1
+    },
+    {
+      "id": 2,
+      "playerId": 2302,
+      "name": "Lionel Messi",
+      "birthday": "1987-10-10",
+      "transfer": "1 billion euro",
+      "playerPosition": 2
+    },
+    {
+      "id": 3,
+      "playerId": 2303,
+      "name": "Dinh Bac Nguyen",
+      "birthday": "2004-04-19",
+      "transfer": "500 thousands euro",
+      "playerPosition": 3
+    }
+  ],
+  "positions": [
+    {
+      "id": 1,
+      "name": "Strike"
+    },
+    {
+      "id": 2,
+      "name": "Attack Mid"
+    },
+    {
+      "id": 3,
+      "name": "Left Strike"
+    },
+    {
+      "id": 4,
+      "name": "Defend"
+    }
+  ]
+}
