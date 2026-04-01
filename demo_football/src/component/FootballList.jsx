@@ -10,12 +10,12 @@ const FootballList = () => {
     const [footballList, setFootballList] = useState([]);
     const [positionList, setPositionList] = useState([])
     const [deletePlayer, setDeletePlayer] = useState({
-        id: "",
-        playerId: "",
+        // id: "",
+        playerCode: "",
         name: "",
-        birthday: "",
-        transfer: "",
-        playerPosition: ""
+        // birthday: "",
+        // transfer: "",
+        position: ""
     });
     const [isShowModal, setIsShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,17 +42,17 @@ const FootballList = () => {
     }
 
     const [search] = useState({
-        playerId: "",
+        playerCode: "",
         name: "",
-        playerPosition: ""
+        position: ""
     });
 
     const handleSearch = async (values) => {
-        const playerList = await getList(); // chờ lấy dữ liệu
+        const playerList = await getList();
         const filterList = playerList.filter(player =>
-            (values.playerId === "" || player.playerId.toString().includes(values.playerId)) &&
+            (values.playerCode === "" || player.playerCode.toLowerCase().includes(values.playerCode.toLowerCase())) &&
             (values.name === "" || player.name.toLowerCase().includes(values.name.toLowerCase())) &&
-            (values.playerPosition === "" || player.playerPosition === Number(values.playerPosition))
+            (values.position === "" || player.position.name === values.position)
         );
 
         setFootballList(filterList);
@@ -67,16 +67,16 @@ const FootballList = () => {
             {console.log("-----render----")}
             <h1>Football Player</h1>
             <div>
-                <Link to={'/football/add'} className={'btn btn-sm btn-success'}>Add new</Link>
+                <Link to={'/football/add'} className={'btn btn-sm btn-success'}>Add new player</Link>
             </div>
             <Formik initialValues={search} onSubmit={handleSearch}>
                 <Form>
-                    <Field name={'playerId'} placeholder={'Enter player id'}/>
+                    <Field name={'playerCode'} placeholder={'Enter player id'}/>
                     <Field name={'name'} placeholder={'Enter name'}/>
-                    <Field as="select" name="playerPosition">
+                    <Field as="select" name="position">
                         <option value="">--------choose position----------</option>
                         {positionList.map(p => (
-                            <option key={p.id} value={p.id}>{p.name}</option>
+                            <option key={p.id} value={p.name}>{p.name}</option>
                         ))}
                     </Field>
                     <Button type={'submit'} className={'btn btn-sm btn-secondary'}>Search</Button>
@@ -105,13 +105,11 @@ const FootballList = () => {
                     <tr key={player.id}>
                         <td>{i+1}</td>
                         <td>{player.id}</td>
-                        <td>{player.playerId}</td>
+                        <td>{player.playerCode}</td>
                         <td>{player.name}</td>
                         <td>{player.birthday}</td>
                         <td>{player.transfer}</td>
-                        <td>
-                            {positionList.find(p => p.id === player.playerPosition)?.name || ""}
-                        </td>
+                        <td>{player.position?.name}</td>
                         <td>
                             <Link className={'btn btn-sm btn-primary'}
                                   to={`/football/detail/${player.id}`}>

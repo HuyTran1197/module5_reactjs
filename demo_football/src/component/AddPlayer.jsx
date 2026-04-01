@@ -5,22 +5,22 @@ import {toast} from "react-toastify";
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {Button} from "react-bootstrap";
-import {getAll} from "../service/PositionService.js";
+import {getAll as getPositionList} from "../service/PositionService.js";
 
 const AddPlayer = () => {
     const [player] = useState({
         id:"",
-        playerId:"",
+        playerCode:"",
         name: "",
         birthday:"",
         transfer:"",
-        playerPosition:""
+        position:""
     });
     const [positionList,setPositionList] = useState([])
 
     useEffect(() => {
         const fetData = async () => {
-            setPositionList(await getAll())
+            setPositionList(await getPositionList())
         }
         fetData();
     }, []);
@@ -30,7 +30,7 @@ const AddPlayer = () => {
     const handleAdd = (value) => {
         value={
             ...value,
-            playerPosition: JSON.parse(value.playerPosition)
+            position: JSON.parse(value.position)
         }
         const fetData = async () => {
             const isSuccess = await addNew(value);
@@ -47,8 +47,8 @@ const AddPlayer = () => {
     const validation = Yup.object({
         id:Yup.number().required('Please fill id')
             .min(1,"must not be less than 1"),
-        playerId:Yup.number().required('Please fill player id')
-            .min(1000,"number's length must not be less than 4"),
+        playerCode:Yup.string().required('Please fill player id')
+            .matches(/^FB-[0-9]{4}$/,'Format code must be "FB-XXXX"'),
         name:Yup.string().required('Please fill name')
             .matches(/^[A-Z][a-z]*(\s[A-z][a-z]*)+$/,'Format name is wrong'),
         birthday: Yup.date().required('Please fill birthday')
@@ -56,7 +56,7 @@ const AddPlayer = () => {
             .typeError('Format birthday is wrong'),
         transfer: Yup.string().required('Please fill transfer')
             .matches(/^[0-9,]+(\s[a-z]+)+$/,'Format transfer is wrong'),
-        playerPosition: Yup.string().required('Please fill position')
+        position: Yup.string().required('Please fill position')
     })
 
     return(
@@ -69,9 +69,9 @@ const AddPlayer = () => {
                         <ErrorMessage name={'id'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <label>Player Id</label>
-                        <Field type ="number" name ="playerId"/>
-                        <ErrorMessage name={'playerId'} className={'text-danger'} component={'small'}/>
+                        <label>Player Code</label>
+                        <Field type ="text" name ="playerCode"/>
+                        <ErrorMessage name={'playerCode'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
                         <label>Name</label>
@@ -89,13 +89,15 @@ const AddPlayer = () => {
                         <ErrorMessage name={'transfer'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <Field as="select" name="playerPosition">
-                            <option value="">--------choose position----------</option>
-                            {positionList.map(p => (
-                                <option key={p.id} value={p.id}>{p.name}</option>
-                            ))}
+                        <Field as ={'select'} name ={'position'}>
+                            <option value={''}>---choose position---</option>
+                            {
+                                positionList.map(p =>(
+                                    <option key={p.id} value={JSON.stringify(p)}>{p.name}</option>
+                                ))
+                            }
                         </Field>
-                        <ErrorMessage name={'playerPosition'} className={'text-danger'} component={'small'}/>
+                        <ErrorMessage name={'position'} className={'text-danger'} component={'small'}/>
 
                     </div>
                     <div>

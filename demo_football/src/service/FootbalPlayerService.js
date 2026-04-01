@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BE_URL = "http://localhost:3000";
+const BE_URL = "http://localhost:8080";
 
 export async function getList() {
     try {
@@ -13,20 +13,19 @@ export async function getList() {
 }
 
 export async function deleteById(id) {
-    if (id === undefined || id === null) return false;
     try {
         const res = await axios.delete(`${BE_URL}/players/${id}`);
-        return res.status === 200;
+        if (res.status===200) return true;
     } catch (e) {
         console.log(e)
-        return false;
     }
+    return false;
 }
 
 export async function addNew(player) {
     try {
         const res = await axios.post(`${BE_URL}/players`,player);
-        if (res.status=="201") return true;
+        if (res.status===201) return true;
     }catch (e) {
         console.log(e)
     }

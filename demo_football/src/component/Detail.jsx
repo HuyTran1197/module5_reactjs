@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router";
 import {findById} from "../service/FootbalPlayerService.js";
-import {getAll} from "../service/PositionService.js";
 
 const Detail = () => {
     const [player,setPlayer] = useState({});
@@ -14,13 +13,6 @@ const Detail = () => {
         fetData();
     }, []);
 
-    const [positionList,setPositionList] = useState([]);
-    useEffect(() => {
-        const fetDataP = async () => {
-            setPositionList(await getAll())
-        }
-        fetDataP();
-    }, []);
 
 
     return(
@@ -28,11 +20,11 @@ const Detail = () => {
             <h2>Player View</h2>
             <div>
                 <p>ID:{player?.id} </p>
-                <p>Player Id:{player?.playerId} </p>
+                <p>Player Id:{player?.playerCode} </p>
                 <p>Name:{player?.name} </p>
                 <p>Birthday:{player?.birthday} </p>
                 <p>Transfer:{player?.transfer} </p>
-                <p>Position:{positionList.find(p=>p.id===player.playerPosition)?.name || ""} </p>
+                <p>Position:{player.position?.name} </p>
             </div>
         </>
     )
