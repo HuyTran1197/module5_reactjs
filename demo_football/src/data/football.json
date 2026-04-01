@@ -1,0 +1,45 @@
+{
+  "players": [
+    {
+      "id": 2,
+      "playerCode": "FP-2310",
+      "name": "Lionel Messi",
+      "birthday": "1987-10-11",
+      "transfer": "1 billion euro",
+      "position": {
+        "id": 4,
+        "name": "Attack Mid"
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": 1,
+      "name": "Strike"
+    },
+    {
+      "id": 2,
+      "name": "Left Strike"
+    },
+    {
+      "id": 3,
+      "name": "Right Strike"
+    },
+    {
+      "id": 4,
+      "name": "Attack Mid"
+    },
+    {
+      "id": 5,
+      "name": "Defend Mid"
+    },
+    {
+      "id": 6,
+      "name": "Defend"
+    },
+    {
+      "id": 7,
+      "name": "Goal Keeper"
+    }
+  ]
+}
