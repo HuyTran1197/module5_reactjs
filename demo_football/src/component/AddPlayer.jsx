@@ -1,34 +1,34 @@
 import {useEffect, useState} from "react";
-import {addNew} from "../service/FootbalPlayerService.js";
+import {ErrorMessage, Field, Form, Formik} from "formik";
+import {addNew} from "../service/FootballPlayerService.js";
 import {useNavigate} from "react-router";
 import {toast} from "react-toastify";
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import {getAll} from "../service/PositionService.js";
 import * as Yup from "yup";
 import {Button} from "react-bootstrap";
-import {getAll as getPositionList} from "../service/PositionService.js";
 
 const AddPlayer = () => {
     const [player] = useState({
-        id:"",
-        playerCode:"",
+        id: "",
+        playerCode: "",
         name: "",
-        birthday:"",
-        transfer:"",
-        position:""
+        birthday: "",
+        transfer: "",
+        position: ""
     });
-    const [positionList,setPositionList] = useState([])
+    const [positionList,setPositionList] = useState([]);
 
     useEffect(() => {
-        const fetData = async () => {
-            setPositionList(await getPositionList())
+        const fetDataPosition = async () => {
+            setPositionList(await getAll());
         }
-        fetData();
+        fetDataPosition();
     }, []);
 
     const navigate = useNavigate();
 
     const handleAdd = (value) => {
-        value={
+        value = {
             ...value,
             position: JSON.parse(value.position)
         }
@@ -37,7 +37,7 @@ const AddPlayer = () => {
             if (isSuccess){
                 toast.success('Add new success');
             }else {
-                toast.error('Id is already exists');
+                toast.error('Add new fails, ID is already exists');
             }
             navigate('/football');
         }
@@ -45,8 +45,6 @@ const AddPlayer = () => {
     }
 
     const validation = Yup.object({
-        id:Yup.number().required('Please fill id')
-            .min(1,"must not be less than 1"),
         playerCode:Yup.string().required('Please fill player id')
             .matches(/^FB-[0-9]{4}$/,'Format code must be "FB-XXXX"'),
         name:Yup.string().required('Please fill name')
@@ -64,49 +62,38 @@ const AddPlayer = () => {
             <Formik initialValues={player} onSubmit={handleAdd} validationSchema={validation}>
                 <Form>
                     <div>
-                        <label>ID</label>
-                        <Field type ="number" name ="id"/>
-                        <ErrorMessage name={'id'} className={'text-danger'} component={'small'}/>
-                    </div>
-                    <div>
-                        <label>Player Code</label>
-                        <Field type ="text" name ="playerCode"/>
+                        <label>Player code: </label>
+                        <Field type={'text'} name={'playerCode'}/>
                         <ErrorMessage name={'playerCode'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <label>Name</label>
-                        <Field type ="text" name ="name"/>
+                        <label>Name: </label>
+                        <Field type={'text'} name={'name'}/>
                         <ErrorMessage name={'name'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <label>Birthday</label>
-                        <Field type ="date" name ="birthday"/>
+                        <label>Birthday: </label>
+                        <Field type={'date'} name={'birthday'}/>
                         <ErrorMessage name={'birthday'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <label>Transfer</label>
-                        <Field type ="text" name ="transfer"/>
+                        <label>Transfer: </label>
+                        <Field type={'text'} name={'transfer'}/>
                         <ErrorMessage name={'transfer'} className={'text-danger'} component={'small'}/>
                     </div>
                     <div>
-                        <Field as ={'select'} name ={'position'}>
+                        <Field as={'select'} name={'position'}>
                             <option value={''}>---choose position---</option>
-                            {
-                                positionList.map(p =>(
-                                    <option key={p.id} value={JSON.stringify(p)}>{p.name}</option>
-                                ))
-                            }
+                            {positionList.map((p)=>(
+                                <option key={p.id} value={JSON.stringify(p)}>{p.name}</option>
+                            ))}
                         </Field>
                         <ErrorMessage name={'position'} className={'text-danger'} component={'small'}/>
-
                     </div>
-                    <div>
-                        <Button type={'submit'}>Save</Button>
-                    </div>
+                    <Button type={'submit'}>Save</Button>
                 </Form>
-
             </Formik>
         </>
     )
 }
-export default AddPlayer ;
+export default AddPlayer;

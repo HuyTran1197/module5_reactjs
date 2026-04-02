@@ -1,26 +1,25 @@
 import {Button, Modal} from "react-bootstrap";
-import {deleteById} from "../service/FootbalPlayerService.js";
+import {deleteById} from "../service/FootballPlayerService.js";
 import {toast} from "react-toastify";
 
-const DeletePlayer = ({isShowModal,deletePlayer,closeModal,setIsLoading}) =>{
+const DeletePlayer = ({isShowModal,deletePlayer,closeModal,setIsLoading}) => {
 
-    const handleClose = () =>{
+    const handleClose = () => {
         closeModal(false);
     }
 
-    const handleDelete = async ()=>{
+    const handleDelete = () => {
         const isSuccess = deleteById(deletePlayer.id);
         if (isSuccess){
-            closeModal(false);
+            handleClose();
             setIsLoading(pre=>!pre);
-            toast.success("Delete success");
+            toast.success('Delete player success');
         }else {
-            toast.error("Delete fails");
+            toast.error('Delete fails');
         }
-
     }
 
-    return(
+    return (
         <>
             <Modal show={isShowModal} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -41,4 +40,5 @@ const DeletePlayer = ({isShowModal,deletePlayer,closeModal,setIsLoading}) =>{
         </>
     )
 }
-export default DeletePlayer ;
+
+export default DeletePlayer;
