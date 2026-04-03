@@ -10,7 +10,7 @@ const Detail = () => {
             setPlayer(await findById(id));
         }
         fetData()
-    }, []);
+    }, [id]);
     return(
         <>
             <h1>Player View</h1>

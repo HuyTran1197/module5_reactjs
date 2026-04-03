@@ -8,6 +8,7 @@ import AddPlayer from "./component/AddPlayer.jsx";
 import {ToastContainer} from "react-toastify";
 import HeaderComponent from "./component/Header.jsx";
 import Detail from "./component/Detail.jsx";
+import EditPlayer from "./component/EditPlayer.jsx";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
                 <Route path={'/'} element={<Home/>}/>
                 <Route path={'/football'} element={<FootballList/>}/>
                 <Route path={'/football/add'} element={<AddPlayer/>}/>
+                <Route path={'/football/edit/:id'} element={<EditPlayer/>}/>
                 <Route path={'/football/detail/:id'} element={<Detail/>}/>
             </Routes>
             <ToastContainer/>

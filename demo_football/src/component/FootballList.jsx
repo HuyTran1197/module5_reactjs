@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {findAll} from "../service/FootballPlayerService.js";
+import {findAll, searchPlayer} from "../service/FootballPlayerService.js";
 import {Link} from "react-router";
 import {Button} from "react-bootstrap";
 import DeletePlayer from "./DeletePlayer.jsx";
@@ -38,14 +38,13 @@ const FootballList = () => {
     })
 
     const handleSearch = async (values) => {
-        const playerList = await findAll();
-        const filterList = playerList.filter(player=>
-            (values.playerCode===""||player.playerCode.toLowerCase().includes(values.playerCode.toLowerCase()))&&
-            (values.name===""||player.name.toLowerCase().includes(values.name.toLowerCase()))&&
-            (values.position===""||player.position.name===values.position)
-        )
-        setFootballList(filterList);
+        const code = values.playerCode;
+        const name = values.name;
+        const position = values.position;
+        setFootballList(await searchPlayer(code,name,position));
+
     }
+
     const handleReset = async () => {
         setFootballList(await findAll());
     }
@@ -68,7 +67,7 @@ const FootballList = () => {
                     <Field as={'select'} name={'position'}>
                         <option value={''}>---choose position---</option>
                         {positionList.map((p)=>(
-                            <option key={p.id} value={p.name}>{p.name}</option>
+                            <option key={p.id} value={p.id}>{p.name}</option>
                         ))}
                     </Field>
                     <Button type={'submit'} className={'btn btn-sm'}>Search</Button>
@@ -101,9 +100,13 @@ const FootballList = () => {
                           <td>{player.transfer}</td>
                           <td>{player.position?.name}</td>
                           <td>
-                              <Link className={'btn btn-sm btn-info'}
+                              <Link className={'btn btn-sm btn-outline-info'}
                                   to={`/football/detail/${player.id}`}>
                                   Detail
+                              </Link>
+                              <Link className={'btn btn-sm btn-warning'}
+                                  to={`/football/edit/${player.id}`}>
+                                  Edit
                               </Link>
                               <Button className={'btn btn-sm btn-danger'}
                                       onClick={()=>
