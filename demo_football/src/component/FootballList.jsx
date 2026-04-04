@@ -1,65 +1,64 @@
 import {useEffect, useState} from "react";
-import {findAll, searchPlayer} from "../service/FootballPlayerService.js";
+import {findALl, searchPlayer} from "../service/FootballPlayerService.js";
 import {Link} from "react-router";
 import {Button} from "react-bootstrap";
 import DeletePlayer from "./DeletePlayer.jsx";
-import {getAll} from "../service/PositionService.js";
 import {Field, Form, Formik} from "formik";
+import {getALl} from "../service/PositionService.js";
 
 const FootballList = () => {
-    const [footballList,setFootballList] = useState([]);
-    const [isShowModal,setIsShowModal] = useState(false);
-    const [isLoading,setIsLoading] = useState(false);
-    const [deletePlayer,setDeletePlayer] = useState({
-        playerCode: "",
-        name: ""
-    })
-    const [positionList,setPositionList] = useState([]);
+    const [playerList,setPlayerList] = useState([]);
 
+    const [deletePlayer,setDeletePlayer] = useState({
+        id:"",
+        playerCode:""
+    });
+    const [isShowModal,setIsShowModal] = useState(false);
+    const [reload,setReload] = useState(false);
 
     useEffect(() => {
-        const fetData = async () => {
-            setFootballList(await findAll());
+        const fetData = async () =>{
+            setPlayerList(await findALl());
         }
         fetData();
-    }, [isLoading]);
+    }, [reload]);
 
-    useEffect(() => {
-        const fetDataPosition = async () => {
-            setPositionList(await getAll());
-        }
-        fetDataPosition();
-    }, []);
-
-    const [search] = useState({
-        playerCode: "",
-        name: "",
-        position: ""
-    })
-
-    const handleSearch = async (values) => {
-        const code = values.playerCode;
-        const name = values.name;
-        const position = values.position;
-        setFootballList(await searchPlayer(code,name,position));
-
-    }
-
-    const handleReset = async () => {
-        setFootballList(await findAll());
-    }
 
     const handleOpenModal = (player) => {
         setDeletePlayer(player);
         setIsShowModal(true);
     }
+    const [positionList,setPositionList] = useState([]);
+    useEffect(() => {
+        const fetDataPosition = async () => {
+            setPositionList(await getALl());
+        }
+        fetDataPosition();
+    }, []);
+
+    const [search] = useState({
+        playerCode:"",
+        name:"",
+        position:""
+    })
+
+    const handleSearch = async (value) => {
+        const code = value.playerCode;
+        const name = value.name;
+        const position = value.position;
+        setPlayerList(await searchPlayer(code,name,position));
+    }
+
+    const handleReset = async () => {
+        setPlayerList(await findALl());
+    }
+
     return(
         <>
-            <h1>Football Player List</h1>
+            <h1>Football Player Management</h1>
             <div>
-                <Link to={'/football/add'} className={'btn btn-sm btn-success'}>Add new player</Link>
+                <Link className={'btn btn-sm btn-success'} to={'/football/add'}>Add new player</Link>
             </div>
-
             <Formik initialValues={search} onSubmit={handleSearch}>
                 <Form>
                     <Field name={'playerCode'} placeholder={'Search code'}/>
@@ -70,10 +69,10 @@ const FootballList = () => {
                             <option key={p.id} value={p.id}>{p.name}</option>
                         ))}
                     </Field>
-                    <Button type={'submit'} className={'btn btn-sm'}>Search</Button>
+                    <Button className={'btn btn-sm'} type={'submit'}>Search</Button>
                     <Button type={'reset'}
-                            onClick={handleReset}
-                            className={'btn btn-sm btn-dark'}>
+                            className={'btn btn-sm btn-dark'}
+                            onClick={handleReset}>
                         Reset
                     </Button>
                 </Form>
@@ -91,7 +90,7 @@ const FootballList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {footballList.map((player,i)=>(
+                  {playerList.map((player,i)=>(
                       <tr key={player.id}>
                           <td>{i+1}</td>
                           <td>{player.playerCode}</td>
@@ -100,17 +99,13 @@ const FootballList = () => {
                           <td>{player.transfer}</td>
                           <td>{player.position?.name}</td>
                           <td>
-                              <Link className={'btn btn-sm btn-outline-info'}
-                                  to={`/football/detail/${player.id}`}>
-                                  Detail
+                              <Link className={'btn btn-sm btn-outline-info'} to={`/football/detail/${player.id}`}>
+                                  View
                               </Link>
-                              <Link className={'btn btn-sm btn-warning'}
-                                  to={`/football/edit/${player.id}`}>
+                              <Link className={'btn btn-sm btn-outline-warning'} to={`/football/edit/${player.id}`}>
                                   Edit
                               </Link>
-                              <Button className={'btn btn-sm btn-danger'}
-                                      onClick={()=>
-                                  handleOpenModal(player)}>
+                              <Button className={'btn btn-sm btn-danger'} onClick={()=> handleOpenModal(player)}>
                                   Delete
                               </Button>
                           </td>
@@ -121,9 +116,10 @@ const FootballList = () => {
             <DeletePlayer isShowModal={isShowModal}
                           deletePlayer={deletePlayer}
                           closeModal={setIsShowModal}
-                          setIsLoading={setIsLoading}
+                          setReload={setReload}
             />
         </>
     )
 }
+
 export default FootballList;

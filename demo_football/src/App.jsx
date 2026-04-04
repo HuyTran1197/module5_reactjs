@@ -4,10 +4,10 @@ import './App.css'
 import FootballList from "./component/FootballList.jsx";
 import {Route, Routes} from "react-router";
 import Home from "./component/Home.jsx";
-import AddPlayer from "./component/AddPlayer.jsx";
 import {ToastContainer} from "react-toastify";
 import HeaderComponent from "./component/Header.jsx";
 import Detail from "./component/Detail.jsx";
+import AddPlayer from "./component/AddPlayer.jsx";
 import EditPlayer from "./component/EditPlayer.jsx";
 
 function App() {
