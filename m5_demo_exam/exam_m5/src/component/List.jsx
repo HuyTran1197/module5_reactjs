@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {findAll, publicMusic, searchName} from "../service/MusicService.jsx";
+import {publicMusic, searchMusic} from "../service/MusicService.jsx";
 import {Link} from "react-router";
 import {Field, Form, Formik} from "formik";
 import {Button, Modal} from "react-bootstrap";
@@ -7,32 +7,59 @@ import {toast} from "react-toastify";
 
 const List = () => {
     const [musicList,setMusicList] = useState([]);
-    const [musicPublic,setPublic] = useState({
-        id:"",
-        name:""
-    });
     const [isShowModal,setIsShowModal] = useState(false);
     const [reload,setReload] = useState(false);
-
+    const [musicPublic,setPublic] = useState({
+        id:"",
+        name:"",
+        startTime:""
+    });
+    const [search,setSearch] = useState({
+        name:"",
+        singleMan:"",
+        status:""
+    })
+    const [page,setPage] = useState(1);
+    const [total,setTotal] = useState(0);
 
     useEffect(() => {
         const fetData = async ()=>{
-            setMusicList(await findAll());
+            const {data,totalPage} = await searchMusic(
+                search.name,
+                search.singleMan,
+                search.status,
+                page);
+            setMusicList(data);
+            setTotal(()=>Math.ceil(totalPage/3));
         }
         fetData();
-    }, [reload]);
+    }, [reload,page,search]);
 
-    const [search] = useState({
-        name:""
-    })
 
     const handleSearch = async (value) => {
-        const name = value.name;
-        setMusicList(await searchName(name));
+        setSearch(value);
+        setPage(1);
     }
 
     const handleReset = async () => {
-        setMusicList(await findAll());
+        setSearch({
+            name:"",
+            singleMan:"",
+            status:""
+        });
+        setPage(1);
+    }
+
+    const handlePre = () => {
+        if (page>1){
+            setPage(pre=>pre-1);
+        }
+    }
+
+    const handleNext = () => {
+        if (page<total){
+            setPage(pre=>pre+1);
+        }
     }
 
     const handleOpenModal = (music) => {
@@ -54,6 +81,7 @@ const List = () => {
         setReload(pre=>!pre);
         toast.success('Công khai thành công');
     }
+
 
     const [music,setMusic] = useState({
         name:"",
@@ -88,14 +116,20 @@ const List = () => {
 
                 </div>
             </div>
-            <div>
+            <div className={'text-end m-3'}>
                 <Link to={'/music/add'} className={'btn btn-sm btn-success'}>
-                    Đăng ký bài hát
+                    + Đăng ký bài hát
                 </Link>
             </div>
             <Formik initialValues={search} onSubmit={handleSearch}>
                 <Form>
                     <Field name={'name'} placeholder={'Nhập bài hát'}/>
+                    <Field name={'singleMan'} placeholder={'Nhập ca sĩ'}/>
+                    <Field name={'status'} as={'select'}>
+                        <option value={''}>---chọn---</option>
+                        <option value={'Công khai'}>Công khai</option>
+                        <option value={'Lưu trữ'}>Lưu trữ</option>
+                    </Field>
                     <Button className={'btn btn-sm'} type={'submit'}>Tìm kiếm</Button>
                     <Button className={'btn btn-sm btn-dark'} onClick={handleReset} type={'reset'}>Quay lại</Button>
                 </Form>
@@ -115,7 +149,7 @@ const List = () => {
                 <tbody>
                   {musicList.map((ms,i)=>(
                       <tr key={ms.id} onClick={()=>handleShow(ms)}>
-                          <td>{i+1}</td>
+                          <td>{(page-1)*3 + i + 1}</td>
                           <td>{ms.name}</td>
                           <td>{ms.singleMan}</td>
                           <td>{ms.startTime}</td>
@@ -131,9 +165,25 @@ const List = () => {
                           </td>
                       </tr>
                   ))}
+                    {(musicList.length==0)?
+                        <tr>
+                            <td className={'text-danger'} colSpan={7}><b>Không có dữ liệu !!!</b></td>
+                        </tr>
+                        : ""
+                    }
                 </tbody>
             </table>
-
+            <div className={'pagination'}>
+                <button onClick={handlePre}> Trước </button>
+                {[...new Array(total)].map((e,i)=>(
+                    <button className={`page-item ${page === i+1? 'active':''}`}
+                            onClick={()=>{setPage(i+1)}}
+                            key={i}>
+                        {i+1}
+                    </button>
+                ))}
+                <button onClick={handleNext}>Sau</button>
+            </div>
             <Modal show={isShowModal} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Modal heading</Modal.Title>

@@ -67,7 +67,7 @@ const AddMusic = () => {
                                         <Field name={'startTime'} placeholder={'hh:mm'} className="form-control text-center"/>
                                         <ErrorMessage name={'startTime'} className={'text-danger'} component={'small'}/>
                                     </div>
-                                    <Field type={'number'} name={'likeCount'} as={'hidden'}/>
+                                    <Field name={'likeCount'} type={'hidden'}/>
                                     <Field name={'status'} value={'Lưu trữ'} type={'hidden'}/>
                                     <Button type={'submit'}>Đăng ký</Button>
                                 </Form>
