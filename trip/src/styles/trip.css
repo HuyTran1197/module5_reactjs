@@ -1,0 +1,128 @@
+body {
+    background: linear-gradient(135deg, #87cefa, #b0e0e6); /* Xanh trời bồng bềnh */
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.main-container {
+    background: #4C8F60;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+h1 {
+    font-weight: 700;
+    color: #333;
+}
+
+.card-custom {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.btn {
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #1cc88a, #17a673);
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+    border: none;
+}
+
+.table thead {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f3f9;
+    transition: 0.2s;
+}
+
+.action-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78,115,223,0.25);
+    border-color: #4e73df;
+}
+
+.header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.badge-time {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #eef2ff;
+}
+
+@media (max-width: 768px) {
+    .header-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Table chuyển sang dạng card cho mobile */
+    .table thead {
+        display: none;
+    }
+
+    .table tbody, .table tbody tr, .table tbody td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tbody tr {
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        padding: 10px;
+        background: #fff;
+    }
+
+    .table tbody td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 20px);
+        font-weight: bold;
+        text-align: left;
+    }
+}
